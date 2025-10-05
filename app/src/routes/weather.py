@@ -3,7 +3,7 @@ import requests
 import os
 from dotenv import load_dotenv
 from app.src.utils.weather_cache import redis_client
-from app.app_logger import get_logger
+from app.src.utils.app_logger import get_logger
 import json
 
 
