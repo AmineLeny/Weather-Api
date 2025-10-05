@@ -41,7 +41,7 @@ async def get_weather_info(location: str) -> dict:
             client_response = {
                 "address": data["address"],
                 "description": data["description"],
-                "Temperature": data["currentConditions"]["temp"],
+                "Temperature": f"{data["currentConditions"]["temp"]} F",
             }
             redis_client.setex(
                 f"weather:{location}", 43200, json.dumps(client_response)
