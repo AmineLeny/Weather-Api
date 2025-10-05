@@ -9,7 +9,6 @@ from logger import get_logger
 load_dotenv()
 
 app_logger = get_logger(__name__)
-base_url = "https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline"
 
 
 @asynccontextmanager
@@ -23,7 +22,7 @@ async def lifespan(app: FastAPI):
 
     try:
         response = requests.get(
-            f"{base_url}/London/?key={os.getenv('WEATHER_API_KEY')}",
+            f"{os.getenv("BASE_URL")}/London/?key={os.getenv('WEATHER_API_KEY')}",
             timeout= 5
         )
         if response.status_code == 200:
