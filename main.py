@@ -9,7 +9,7 @@ load_dotenv()
 base_url = "https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/"
 
 response = requests.get(
-    f"https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/London,UK/?key={os.getenv('WEATHER_API_KEY')}"
+    f"https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/London/?key={os.getenv('WEATHER_API_KEY')}"
 )
 
 data = response.json()
