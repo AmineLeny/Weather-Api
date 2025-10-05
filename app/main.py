@@ -5,6 +5,7 @@ from fastapi import FastAPI, status, HTTPException
 from app.src.weather_cache import redis_client
 from contextlib import asynccontextmanager
 from app.app_logger import get_logger
+from app.src.routes.weather import weather
 
 load_dotenv()
 
@@ -48,8 +49,18 @@ async def lifespan(app: FastAPI):
     app_logger.info("🛑 Application shutting down")
 
 
+
 app = FastAPI(
     title="Weather Api",
     description="An Api to get weather conditions based on location",
     lifespan=lifespan,
 )
+
+app.include_router(weather)
+
+
+@app.get("/")
+def healthcheck(): 
+    return  {
+        "message" : "App is healthy"
+    }
