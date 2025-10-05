@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException
 import requests
 import os
 from dotenv import load_dotenv
-from app.src.weather_cache import redis_client
+from app.src.utils.weather_cache import redis_client
 from app.app_logger import get_logger
 import json
 

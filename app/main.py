@@ -2,7 +2,7 @@ import requests
 import os
 from dotenv import load_dotenv
 from fastapi import FastAPI, status, HTTPException
-from app.src.weather_cache import redis_client
+from app.src.utils.weather_cache import redis_client
 from contextlib import asynccontextmanager
 from app.app_logger import get_logger
 from app.src.routes.weather import weather
