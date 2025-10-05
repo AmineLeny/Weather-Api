@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 from fastapi import FastAPI, status, HTTPException
 from app.src.weather_cache import redis_client
 from contextlib import asynccontextmanager
-from logger import get_logger
+from app.app_logger import get_logger
 
 load_dotenv()
 
