@@ -56,7 +56,7 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
-app.include_router(weather)
+app.include_router(weather, prefix="/api/v1")
 
 
 @app.get("/")
