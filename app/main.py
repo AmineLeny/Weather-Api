@@ -1,22 +1,56 @@
 import requests
 import os
 from dotenv import load_dotenv
-from 
+from fastapi import FastAPI, status, HTTPException
+from app.src.weather_cache import redis_client
+from contextlib import asynccontextmanager
+from logger import get_logger
+
 load_dotenv()
 
+app_logger = get_logger(__name__)
+base_url = "https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline"
 
-base_url = "https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/"
 
-response = requests.get(
-    f"https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/London/?key={os.getenv('WEATHER_API_KEY')}"
-)
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    app_logger.info("🚀 Application starting")
+    try:
+        redis_client.ping()
+        app_logger.info("✅ Redis connected")
+    except Exception as e:
+        app_logger.error(f" ❌ Redis failed : {e}")
 
-data = response.json()
+    try:
+        response = requests.get(
+            f"{base_url}/London/?key={os.getenv('WEATHER_API_KEY')}",
+            timeout= 5
+        )
+        if response.status_code == 200:
+            data = response.json()
+            
+            app_logger.info(
+                    f"✅ Weather API test  "
+                    f"address : { data['address']} "
+                    f"description : {data['description']}"
+                    f"Temperature : {data['currentConditions']['temp']}°F"
+                
+            )
+        else:
+            app_logger.error(f"❌ Weather API failed: {response.status_code}")
 
-print(
-    {
-        "address": data["address"],
-        "description": data["description"],
-        "Temperature": data["currentConditions"]["temp"],
-    }
+    except requests.RequestException as e:
+        app_logger.error(f"❌ Weather API failed: {e}")
+    except Exception as e:
+        app_logger.error(f"❌ Weather API failed: {e}")
+
+    yield
+
+    app_logger.info("🛑 Application shutting down")
+
+
+app = FastAPI(
+    title="Weather Api",
+    description="An Api to get weather conditions based on location",
+    lifespan=lifespan,
 )
